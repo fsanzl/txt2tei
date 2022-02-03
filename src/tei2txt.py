@@ -5,7 +5,6 @@ import sys
 import re
 import os
 from bs4 import BeautifulSoup as bs
-from binaryornot.check import is_binary
 import pandas as pd
 
 
