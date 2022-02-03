@@ -74,6 +74,8 @@ text_file += f'<el>{lista_personajes.strip("*")}\n'
 body = soup.body
 actos = body.find_all(re.compile('^div$', re.I))
                       #attrs={'type':re.compile('^act$', re.I)})
+if len(actos) < 1:
+    actos = [body]
 n = 1
 tab = '\t'
 for acto in actos:
