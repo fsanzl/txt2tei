@@ -296,7 +296,7 @@ def parse_name(ln, characters_list, on_stage):
         speakers = splitted[0].strip().upper()
         pids = [f'#{pid.strip()}' for pid in ids]
         speaker_info = [speakers, pids, '']
-        characters_list.append(speaker_info)
+        characters_list[speaker_info[1][0]] = [speaker_info[0], speaker_info[2]]
     else:
         pids = []
         ip = []
