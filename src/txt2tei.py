@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-# v.0.0.1 
-# Fernando Sanz-Lázaro <fernando.sanz-lazaro@univie.ac.at>
 from sys import argv
 import re
 from datetime import datetime
@@ -296,7 +294,7 @@ def parse_name(ln, characters_list, on_stage):
         speakers = splitted[0].strip().upper()
         pids = [f'#{pid.strip()}' for pid in ids]
         speaker_info = [speakers, pids, '']
-        characters_list[speaker_info[1][0]] = [speaker_info[0], speaker_info[2]]
+        characters_list.append(speaker_info)
     else:
         pids = []
         ip = []
@@ -396,7 +394,7 @@ for idx, line in enumerate(lines):
             parsed_line = parse_name(line, characters_list, on_stage)
             body += parsed_line[0]
             on_stage = parsed_line[1]
-        elif line.startswith('\t'):
+        elif line.startswith('\t') or line.startswith('<p>'):
             for i in list(range(1, 9)):
                 if idx+i < len(lines):
                     if re.search(r'^[A-ZÁ-Ú0-9\[\.]+', lines[idx+i]):
