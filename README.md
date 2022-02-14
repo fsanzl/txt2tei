@@ -5,7 +5,7 @@
 <h3 align="center">An aid to annotate plays as XML-TEI</h2>
 
 
-*txt2tei* is a Python programme to convert plays from minimally annotated tabular TXT files to XM-TEI. It allows to speed up the creation of XML files as it automatises the annotation, requiring only a visual edition of txt files resembling a simplified version of the printed layout.
+*txt2tei* is a Python programme to convert plays from minimally annotated tabular TXT files to XML-TEI. It allows to speed up the creation of XML files as it automatises the annotation, requiring only a visual edition of txt files resembling a simplified version of the printed layout.
 
 These scripts are part of the research project [Sound and Meaning in Spanish Golden Age Literature](https://soundandmeaning.univie.ac.at/).
 
