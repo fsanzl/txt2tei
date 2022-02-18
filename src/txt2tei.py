@@ -23,9 +23,9 @@ header_labels = {'<t>': 'title', '<tt>': 'subtitle', '<a>': 'author',
 body_labels = {'j': 'act', '<e>': 'echo', '<p>': 'prose',
                '<i>': 'stage_direction', '<x>': 'comment'}
 
-authors = {'Calderón': ['<author><persName><forename>Pedro</forename>'
-                        '<surname sort="1">'
-                        'Calderón</surname><nameLink>de la</nameLink>'
+authors = {'Calderón': ['<forename>Pedro</forename>'
+                        '<surname sort="1">Calderón</surname>'
+                        '<nameLink>de la</nameLink>'
                         '<surname>Barca</surname>', '118518399', 'Q170800'],
            'Lope': ['<author><persName>'
                     '<forename>Félix</forename><surname sort="1">'
@@ -36,7 +36,12 @@ authors = {'Calderón': ['<author><persName><forename>Pedro</forename>'
                                 '<surname sort="1">Calderón</surname>'
                                 '<nameLink>de la</nameLink>'
                                 '<surname>Barca</surname>(attrib.)',
-                                '118518399', 'Q170800']}
+                                '118518399', 'Q170800'],
+           'Moreto': ['<forename>Agustín</forename><surname>Moreto</surname>',
+                      'xxx', 'xxx'],
+            'Moreto (atri.)': ['<forename>Agustín</forename><surname>Moreto</surname>'
+                       '(attrib.)','xxx', 'xxx'],
+           }
 
 
 def assign_gender(name):
@@ -115,8 +120,10 @@ def compose_fileDesc(title, subtitle, author, licence, source, date='1600s'):
     name = authors[author][0]
     pnd = authors[author][1]
     wikidata = authors[author][2]
-    titleStmt = f'<titleStmt><title type="main">{title}</title>'\
-        f'<title type="sub">{subtitle}</title>{name}</persName>'\
+    titleStmt = '<titleStmt>'\
+        f'<title type="main">{title}</title>'\
+        f'<title type="sub">{subtitle}</title>'\
+        f'<author><persName>{name}</persName>'\
         f'<idno type="wikidata">{wikidata}</idno>'\
         f'<idno type="pnd">{pnd}</idno></author></titleStmt>'
     publicationStmt = '<publicationStmt><authority>University of Vienna,'\
