@@ -26,21 +26,23 @@ body_labels = {'j': 'act', '<e>': 'echo', '<p>': 'prose',
 authors = {'Calderón': ['<forename>Pedro</forename>'
                         '<surname sort="1">Calderón</surname>'
                         '<nameLink>de la</nameLink>'
-                        '<surname>Barca</surname>', '118518399', 'Q170800'],
-           'Lope': ['<author><persName>'
-                    '<forename>Félix</forename><surname sort="1">'
+                        '<surname>Barca</surname>', '118518399', 'Q170800', 1],
+           'Lope': ['<forename>Félix</forename><surname sort="1">'
                     'Lope</surname><nameLink>de</nameLink><surname>Vega'
-                    '</surname>', 'xxx', 'xxx'],
+                    '</surname>', 'xxx', 'xxx', 0],
+           'Lope': ['<forename>Félix</forename><surname sort="1">'
+                    'Lope</surname><nameLink>de</nameLink><surname>Vega'
+                    '</surname>(attrib.)', 'xxx', 'xxx', 1],
            'Calderón (atri.)': ['<author cert="medium"><persName>'
                                 '<forename>Pedro</forename>'
                                 '<surname sort="1">Calderón</surname>'
                                 '<nameLink>de la</nameLink>'
                                 '<surname>Barca</surname>(attrib.)',
-                                '118518399', 'Q170800'],
+                                '118518399', 'Q170800', 1],
            'Moreto': ['<forename>Agustín</forename><surname>Moreto</surname>',
-                      'xxx', 'xxx'],
+                      'xxx', 'xxx', 0],
             'Moreto (atri.)': ['<forename>Agustín</forename><surname>Moreto</surname>'
-                       '(attrib.)','xxx', 'xxx'],
+                       '(attrib.)','xxx', 'xxx', 1],
            }
 
 
@@ -120,10 +122,14 @@ def compose_fileDesc(title, subtitle, author, licence, source, date='1600s'):
     name = authors[author][0]
     pnd = authors[author][1]
     wikidata = authors[author][2]
+    if authors[author][3] == 0:
+        attribution = ''
+    else:
+        attribution = ' cert="medium"'
     titleStmt = '<titleStmt>'\
         f'<title type="main">{title}</title>'\
         f'<title type="sub">{subtitle}</title>'\
-        f'<author><persName>{name}</persName>'\
+        f'<author{attribution}><persName>{name}</persName>'\
         f'<idno type="wikidata">{wikidata}</idno>'\
         f'<idno type="pnd">{pnd}</idno></author></titleStmt>'
     publicationStmt = '<publicationStmt><authority>University of Vienna,'\
