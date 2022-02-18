@@ -2,10 +2,10 @@
 
 
 <h2 align="center">TXT2TEI</h2>
-<h3 align="center">An aid to annotate plays as XML-TEI</h2>
+<h3 align="center">An aid to encoding plays as XML-TEI</h2>
 
 
-*txt2tei* is a Python programme to convert plays from minimally annotated tabular TXT files to XM-TEI. It allows to speed up the creation of XML files as it automatises the annotation, requiring only a visual edition of txt files resembling a simplified version of the printed layout.
+*txt2tei*  is a Python script to encode Spanish Siglo de Oro plays as XML-TEI files. It takes a minimally annotated tabular TXT file resembling the printed layout with a reduced set of simple tags. The script speeds up the process of encoding TEI files by automating their annotation, requiring just an (almost) visual edition of the sourceTXT files.
 
 These scripts are part of the research project [Sound and Meaning in Spanish Golden Age Literature](https://soundandmeaning.univie.ac.at/).
 
