@@ -1,0 +1,42 @@
+<Authors>
+  <author name="Calder&#243;n" cert="high">
+    <persName>
+      <forename>Pedro</forename>
+      <surname sort="1">Calder&#243;n</surname>
+      <nameLink>de la</nameLink>
+      <surname>Barca</surname>
+    </persName>
+    <idno type="wikidata">Q170800</idno>
+    <idno type="pnd">118518399</idno>
+  </author>
+  <author name="Lope" cert="high">
+    <persName>
+      <forename>F&#233;lix</forename>
+      <surname sort="1">Lope</surname>
+      <nameLink>de</nameLink>
+      <surname>Vega</surname>
+      <surname>Carpio</surname>
+    </persName>
+    <idno type="wikidata">Q165257</idno>
+  </author>
+  <author cert="medium" name="Calder&#243;n">
+    <persName>(attr.)<forename>Pedro</forename><surname sort="1">Calder&#243;n</surname><nameLink>de la</nameLink><surname>Barca</surname></persName>
+    <idno type="wikidata">Q170800</idno>
+    <idno type="pnd">118518399</idno>
+  </author>
+  <author cert="medium" name="Lope">
+    <persName>(attr.)<forename>F&#233;lix</forename><surname sort="1">Lope</surname><nameLink>de</nameLink><surname>Vega</surname><surname>Carpio</surname></persName>
+    <idno type="wikidata">Q165257</idno>
+  </author>
+  <author name="Moreto" cert="high">
+    <persName>
+      <forename>Agust&#237;n</forename>
+      <surname>Moreto</surname>
+    </persName>
+    <idno type="wikidata">Q399346</idno>
+  </author>
+  <author cert="medium" name="Moreto">
+    <persName>(attr.)<forename>Agust&#237;n</forename><surname>Moreto</surname></persName>
+    <idno type="wikidata">Q399346</idno>
+  </author>
+</Authors>
