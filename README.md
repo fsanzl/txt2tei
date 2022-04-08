@@ -1,5 +1,6 @@
 [![License: GPL](https://img.shields.io/github/license/fsanzl/txt2tei)](https://opensource.org/licenses/GPL-3.0)
-
+<!--- [![Version: 1.0.1](https://img.shields.io/github/v/release/fsanzl/txt2tei?include_prereleases)](https://pypi.org/project/txt2tei/)
+# [![Python versions: 3.5, 3.6, 3.7, 3.8, 3.9](https://img.shields.io/pypi/pyversions/txt2tei)](https://pypi.org/project/txt2tei/) -->
 
 <h2 align="center">TXT2TEI</h2>
 <h3 align="center">An aid to encoding plays as XML-TEI</h2>
@@ -17,13 +18,19 @@ The programme requires following libraries:
 * pandas
 * datetime
 * unidecode
+* lxml
+
+txt2tei runs on lxml and tei2txt on BS4. They may be unified in the future though. 
+
 
 # Installation
 
-Download the python scripts and the file sexos.csv in the same directory
+Download the python scripts and the files sexos.csv, config.py and authors.xml in the same directory
 
 
 ## Use
+
+Edit config.py with your edition data and run the following commands:
 
 ```bash
 ./txt2tei.py tabularfile.txt
@@ -39,15 +46,16 @@ Additionally, the script tei2txt.py performs the inverse operation
 The tabular file must follow the following conventions:
 ```
 <x>Comment
-<a>Author's name
+<a>Author's name (Just one single word, e.g. Calderón, Lope, Tirso...
 <t>Title
 <g>Genre
 <s>Subgenre
 <o>Source*URL
 <f>Date
 <x> The tag el marks the dramatis personae of  <castList>
-<el>CHARACTER 1, a character*CHARACTER 2, another character*CHARACTER 3, a third one*CHARACTER 4, and just one more
+<el>DRAMATIS PERSONAE (optional)|CHARACTER 1, a character*CHARACTER 2, another character*CHARACTER 3, a third one*CHARACTER 4, and just one more
 <j>Act
+<sc>Scene
 <i>Stage direction
 <x>Comment
 CHARACTER ONE
