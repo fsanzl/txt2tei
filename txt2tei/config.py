@@ -1,0 +1,6 @@
+editor = 'Fernando Sanz-Lázaro'
+authority = 'University of Vienna, Institute of Romance Languages and Literatures'
+publisher_id  = 'dracor'
+publisher_name = 'DraCor'
+licence = 'CC0 1.0'
+licence_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
