@@ -5,157 +5,45 @@ from datetime import datetime
 from unidecode import unidecode
 from bs4 import BeautifulSoup
 import pandas as pd
-import lxml.etree as etree
-from lxml.etree import Element, SubElement, ElementTree, parse
-from pathlib import Path
 
 hodie = datetime.today().strftime('%Y-%m-%d')
 nunc = datetime.today().strftime('%H:%M:%S')
-editor = ''
-authority = ''
-publisher_id = ''
-publisher = ''
-licence = ''
-licence_url = ''
-
-from config import *
-
 input_file = argv[1]
 output = f'{argv[1].rsplit(".", 1)[0]}.xml'
 if len(argv) > 2:
     edition = argv[2]
 else:
     edition = '0.1'
+
+licences = {'cc0': ['CC0 1.0',
+                    'https://creativecommons.org/publicdomain/zero/1.0/']}
 header_labels = {'<t>': 'title', '<tt>': 'subtitle', '<a>': 'author',
                  '<g>': 'genre', '<s>': 'subgenre', '<o>': 'source',
                  '<f>': 'date', '<el>': 'elenco', '<x>': 'comment'}
 body_labels = {'j': 'act', '<e>': 'echo', '<p>': 'prose',
                '<i>': 'stage_direction', '<x>': 'comment'}
 
-def make_tree(title, subtitle, author, source, date='1600s'):
-    persons_dict = {}
-    xml_model = '<?xml-model http://www.tei-c.org/release/xml/tei/custom/'\
-        'schema/relaxng/tei_all.rng application/xml http://relaxng.org/ns/'\
-        'structure/1.0 http://www.tei-c.org/release/xml/tei/custom/schema/'\
-        'relaxng/tei_all.rng application/xml'\
-        'http://purl.oclc.org/dsdl/schematron ?>'
-    root = Element('TEI')
-    tree = etree.ElementTree(root)
-    tei_header = SubElement(root, 'teiHeader')
-    # fileDesc
-    file_desc = SubElement(tei_header, 'fileDesc')
-    title_stmt = Element('titleStmt')
-    title_stmt = make_title(title_stmt, title, subtitle)
-    title_stmt = make_authors(title_stmt, author)
-    title_stmt = make_editor(title_stmt, editor)
-    file_desc.insert(1, title_stmt)
-    # publicationStmt
-    publication_stmt = SubElement(file_desc, 'publicationStmt')
-    publication_stmt = make_edition(publication_stmt)
-    file_desc.insert(1, publication_stmt)
-    # srcDesc
-    source_desc = SubElement(file_desc, 'sourceDesc')
-    make_source(source_desc, source)
-    file_desc.insert(1, source_stmt)
-
-
-    # profileDesc
-    profileDesc = SubElement(tei_header, 'profileDesc')
-    make_participants()
-    SubElement(
-        SubElement(
-            profileDesc,
-            'keywords'),
-        'term').set(
-            'type',
-        'genreTitle').text = genre
-    characters_dict[make_id(pair[0])] = [pair[0], pair[1]]
-
-    # revisionDesc
-    make_revision()
-    # Construct text and body
-    SubElement(root, 'text')
-    SubElement(text, 'front')
-    SubElement(text, 'body')
-
-    return tree
-
-
-def make_title(title_stmt, title, subtitle):
-    if len(subtitle) > 0:
-        titlea = SubElement(title_stmt, 'title', type='main')
-        titleb = SubElement(title_stmt, 'title', type='sub')
-        titleb.text = subtitle
-    else:
-        titlea = SubElement(title_stmt, 'title')
-    titlea.text = title
-    return title_stmt
-
-
-def make_authors(title_stmt, author):
-    print(author)
-    title_stmt.insert(1, author)
-    return title_stmt
-
-
-def make_editor(title_stmt, editor):
-    resp_stmt = SubElement(title_stmt, 'respStmt')
-    SubElement(
-        resp_stmt,
-        'resp').text = 'Automatic generation of the XML/TEI by'
-    SubElement(resp_stmt, 'persName').text = editor
-    return title_stmt
-
-
-def make_edition(publication_stmt):
-    SubElement(publication_stmt, 'authority').text = authority
-    SubElement(publication_stmt, 'publisher').set(
-        'xml:id',
-        publisher_id).text = publisher
-    SubElement(publication_stmt, 'date', when=f'{hodie} {nunc}')
-    lic = SubElement(SubElement(publication_stmt, 'availability'), 'licence')
-    SubElement(lic, 'ab').text = licence
-    SubElement(lic, 'ref').text = licence_url
-    return publication_stmt
-
-
-def make_source(source_stmt, source):
-    bibld = SubElement(source_desc, 'bibl').set('type', 'digitalSource')
-    source = [x.strip() for x in source.split('*')]
-    original = ''
-    web = ''
-    url = ''
-    if len(source) > 0:
-        original = source[0]
-        if len(source) > 1:
-            web = source[1]
-            if len(source) > 2:
-                url = source[2]
-    SubElement(bibld, 'name').text = web
-    SubElement(bibld, 'idno').set('type', 'URL').text = url
-    biblo = SubElement(source_desc, 'bibl').set('type', 'originalSource')
-    SubElement(biblo, 'title').text = original
-    SubElement(biblo, 'date', when=date).set('type', 'print')
-    SubElement(biblo, 'date', when=date).set('type', 'written')
-    return source_stmt
-
-
-def make_revision():
-    first_commit = SubElement(
-        SubElement(SubElement(tei_header, 'revisionDesc'),
-                   'listChange'), 'change', when=f'{hodie} {nunc}')
-    first_commit.text = 'Converted with txt2tei'\
-        '<https://github.com/fsanzl/txt2tei>'
-
-
-def make_participants():
-    characters_dict[make_id(pair[0])] = [pair[0], pair[1]]
-    list_persons = SubElement(
-        SubElement(
-            profileDesc,
-            'particDesc'),
-        'listPerson')
-    parse_speakers()
+authors = {'Calderón': ['<forename>Pedro</forename>'
+                        '<surname sort="1">Calderón</surname>'
+                        '<nameLink>de la</nameLink>'
+                        '<surname>Barca</surname>', '118518399', 'Q170800', 1],
+           'Lope': ['<forename>Félix</forename><surname sort="1">'
+                    'Lope</surname><nameLink>de</nameLink><surname>Vega'
+                    '</surname>', 'xxx', 'xxx', 0],
+           'Lope': ['<forename>Félix</forename><surname sort="1">'
+                    'Lope</surname><nameLink>de</nameLink><surname>Vega'
+                    '</surname>(attrib.)', 'xxx', 'xxx', 1],
+           'Calderón (atri.)': ['<author cert="medium"><persName>'
+                                '<forename>Pedro</forename>'
+                                '<surname sort="1">Calderón</surname>'
+                                '<nameLink>de la</nameLink>'
+                                '<surname>Barca</surname>(attrib.)',
+                                '118518399', 'Q170800', 1],
+           'Moreto': ['<forename>Agustín</forename><surname>Moreto</surname>',
+                      'xxx', 'xxx', 0],
+            'Moreto (atri.)': ['<forename>Agustín</forename><surname>Moreto</surname>'
+                       '(attrib.)','xxx', 'xxx', 1],
+           }
 
 
 def assign_gender(name):
@@ -189,12 +77,12 @@ def find_characters(play_file):
     names = []
     characters_dict = {}
     indirect = ['ÉL', 'ELLA', 'ELLOS', 'ELLAS', 'TODOS', 'TODAS']
-    #'UNOS', 'OTROS', 'UNAS', 'OTRAS',
-    # 'UNO', 'OTRO', 'UNA', 'OTRA']
+                #'UNOS', 'OTROS', 'UNAS', 'OTRAS',
+                #'UNO', 'OTRO', 'UNA', 'OTRA']
     collective = ['LOS ', 'LAS ']
     while True:
         line = play_file.readline().split('#')[0]
-        if re.search(r'^[\[A-ZÁ-Úa-zá-ú0-9]', line):
+        if re.search('^[\[A-ZÁ-Úa-zá-ú0-9]', line):
             characters = grouped(line)
             for character in characters:
                 character = character.strip().replace('[', '').replace(']', '')
@@ -228,6 +116,49 @@ def find_characters(play_file):
     return characters_dict
 
 
+def compose_fileDesc(title, subtitle, author, licence, source, date='1600s'):
+    if author in ['Pedro Calderón de la Barca']:
+        author = 'Calderón'
+    name = authors[author][0]
+    pnd = authors[author][1]
+    wikidata = authors[author][2]
+    if authors[author][3] == 0:
+        attribution = ''
+    else:
+        attribution = ' cert="medium"'
+    titleStmt = '<titleStmt>'\
+        f'<title type="main">{title}</title>'\
+        f'<title type="sub">{subtitle}</title>'\
+        f'<author{attribution}><persName>{name}</persName>'\
+        f'<idno type="wikidata">{wikidata}</idno>'\
+        f'<idno type="pnd">{pnd}</idno></author></titleStmt>'
+    publicationStmt = '<publicationStmt><authority>University of Vienna,'\
+        'Institute of Romance Languages and Literatures'\
+        '</authority><publisher xml:id="dracor">DraCor</publisher>'\
+        f'<date when="{hodie}"><time when="{nunc}"/></date>'\
+        f'<idno type="quadramaX">{title}</idno>'\
+        f'<availability><licence><ab>{licence[0]}</ab>'\
+        f'<ref target="{licence[1]}">Licence</ref></licence></availability>'\
+        '</publicationStmt>'
+    source = [x.strip() for x in source.split('*')]
+    original = ''
+    web = ''
+    url = ''
+    if len(source) > 0:
+        original = source[0]
+        if len(source) > 1:
+            web = source[1]
+            if len(source) > 2:
+                url = source[2]
+
+    SourceDesc = '<sourceDesc><bibl type="digitalSource">'\
+        f'<name>{web}</name><idno type="URL">{url}</idno>'\
+        f'<bibl type="originalSource"><title>{original}</title>'\
+        f'<date type="print" when="{date}"/>'\
+        '<date type="written"/></bibl></bibl></sourceDesc>'
+    return f'<fileDesc>{titleStmt}{publicationStmt}{SourceDesc}</fileDesc>'
+
+
 def parse_speakers(line):
     collective = ['UNOS', 'OTROS', 'UNAS', 'OTRAS', 'HOMBRES', 'MUJERES',
                   'MÚSIC', 'CORO', 'VOCES', 'SOLDADOS']
@@ -240,10 +171,9 @@ def parse_speakers(line):
             person = 'personGrp'
         else:
             person = 'person'
-        char = SubElement(list_person, person).set({'xml:id', pid,
-                                                    'sex', sex})
-        char.text = name
-    return 0
+        speakers += f'<{person} sex="{sex}" xml:id="{pid}"><persName>{name}'\
+            f'</persName></{person}>'
+    return f'{speakers}</listPerson>'
 
 
 def parse_cast(line):
@@ -291,12 +221,8 @@ def grouped(character):
 
 
 def parse_collective_name(character, on_stage, characters_list):
-    todos = [
-        x for x in on_stage
-        if x in characters_list and characters_list[x][1] == 'MALE']
-    todas = [
-        x for x in on_stage
-        if x in characters_list and characters_list[x][1] == 'FEMALE']
+    todos = [x for x in on_stage if x in characters_list and characters_list[x][1] == 'MALE']
+    todas = [x for x in on_stage if x in characters_list and characters_list[x][1] == 'FEMALE']
     groups = {'TODOS': (-1, False), 'TODAS': (-1, True),
               'LOS DOS': (2, False), 'LOS 2': (2, False), 'ELLOS': (2, False),
               'LAS DOS': (2, True), 'LAS 2': (2, True), 'ELLAS': (2, True),
@@ -328,7 +254,7 @@ def parse_pronoun(pronoun, on_stage, characters_list):
     else:
         sex = 'FEMALE'
     return [[person for person in on_stage
-             if characters_list[person][1] == sex][-1]]
+            if characters_list[person][1] == sex][-1]]
 
 
 def parse_exit(on_stage, line):
@@ -340,7 +266,7 @@ def parse_exit(on_stage, line):
             elif line.upper().startswith('VASE'):
                 on_stage = on_stage[:-1]
             elif line.upper().startswith('VANSE'):
-                on_stage = on_stage[:-2]
+                on_stage =  on_stage[:-2]
             else:
                 pass
     return on_stage
@@ -373,7 +299,6 @@ def parse_speech(ln, nextl, nl):
 def compare_sexes(pids, characters_list):
     return 'UNKNOWN'
 
-
 def parse_name(ln, characters_list, on_stage):
     sex = ''
     if '#' in ln:
@@ -393,7 +318,7 @@ def parse_name(ln, characters_list, on_stage):
             ip = [make_id(speaker)]
             if 'MÚSIC' in speaker:
                 ip = ['#musicos']
-            # elif ip in characters_list:
+            #elif ip in characters_list:
             #    speaker_info = [speaker, [ip], characters_list[ip][1]]
             elif any(speaker.startswith(x)
                      for x in ['TODO', 'TODA', 'LOS ', 'LAS ', 'ELLOS', 'ELLAS']):
@@ -417,7 +342,6 @@ source = ''
 on_stage = []
 dramatis_personae = ''
 
-
 with open(input_file) as f:
     characters_list = find_characters(f)
 with open(input_file) as g:
@@ -435,22 +359,9 @@ for line in lines:
             break
     else:
         break
-
-fauthors = parse('authors.xml')
-author = author.split()
-if len(author) > 1:
-    cert = 'medium'
-else:
-    cert = 'high'
-author = author[0]
-author = fauthors.xpath(f'//Authors/author[@name="{author}"][@cert="{cert}"]')[0]
-print(author)
-print(make_tree(title, subtitle, author, source))
-
 licence = licences['cc0']
 metadata = [compose_fileDesc(title, subtitle, author, licence, source, date),
             compose_profileDesc(characters_list, genre)]
-
 header = f'<teiHeader>{metadata[0]}{metadata[1]}</teiHeader>'
 #############################
 preliminaries = f'<front>{dramatis_personae}</front>'
@@ -474,30 +385,18 @@ for idx, line in enumerate(lines):
     extra = ''
     changing = False
     next_line = ''
-    dive = ''
-    cierree = ''
     if not any(line.startswith(x) for x in header_labels):
         changing = False
-
-        if line.startswith('<j>') or line.startswith('<q>'):
+        if line.startswith('<j>'):
             on_stage = []
-            div = ''
-            if line.startswith('<j>'):
-                act += 1
-                cierre = cierree
-                if act > 1:
-                    cierre += '</div>'
-                div = f'{cierre}<div type="act" n="{act}"><head>Jornada'\
-                    f'{roman[act]}</head>'
-                cierree = ''
+            act += 1
+            if act > 1:
+                cierre = '</div>'
             else:
-                esc += 1
-                if esc > 1:
-                    cierree = '</div>'
-                div = f'{cierree}<div type="scene" n="{esc}"><head>Escena'\
-                    f'{esc}</head>'
+                cierre = ''
+            div = f'{cierre}<div type="act" n="{act}"><head>Jornada'\
+                f'{roman[act]}</head>'
             body += div
-
         if line.strip() in reference.keys():
             print(f'{input_file}:\tPlease, edit manually <sp who="#character">'
                   f'for {line.strip()} in {output} verse {n}\n')
