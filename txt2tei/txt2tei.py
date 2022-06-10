@@ -61,9 +61,10 @@ def make_tree(title, subtitle, author, source, date,
     profile_desc = SubElement(tei_header, 'profileDesc')
     par = SubElement(profile_desc, 'particDesc')
     par.append(make_participants(speakers_list))
+    text_class = SubElement(profile_desc, 'textClass')
     gen = SubElement(
         SubElement(
-            profile_desc,
+            text_class,
             'keywords'),
         'term',
         type='genreTitle')
@@ -107,7 +108,7 @@ def make_edition(publication_stmt, authority, publisher, licence):
     pub.set('{http://www.w3.org/XML/1998/namespace}id', publisher[0])
     pub.text = publisher[1]
     SubElement(publication_stmt, 'idno', type='URL').text = publisher[2]
-    SubElement(publication_stmt, 'date', when=f'{hodie} {nunc}')
+    SubElement(publication_stmt, 'date', when=f'{hodie}T{nunc}+01:00')
     lic = SubElement(SubElement(publication_stmt, 'availability'), 'licence')
     SubElement(lic, 'ab').text = licence
     SubElement(lic, 'ref').text = licence_url
@@ -136,9 +137,9 @@ def make_source(source_desc, source):
 
 
 def make_revision():
-    rev = Element('RevisionDesc')
+    rev = Element('revisionDesc')
     first_commit = SubElement(SubElement(rev, 'listChange'),
-                              'change', when=f'{hodie} {nunc}')
+                              'change', when=f'{hodie}T{nunc}+01:00')
     first_commit.text = 'Converted with txt2tei'\
         '<https://github.com/fsanzl/txt2tei>'
     return rev
