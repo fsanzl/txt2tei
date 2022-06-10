@@ -159,7 +159,7 @@ def make_participants(speakers_list):
             person = 'person'
         char = SubElement(list_person, person, sex=sexo)
         char.set('{http://www.w3.org/XML/1998/namespace}id', pid)
-        char.text = name
+        SubElement(char, 'persName').text = name
     return list_person
 
 
