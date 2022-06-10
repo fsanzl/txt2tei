@@ -16,11 +16,8 @@ licence = 'CC0'
 licence_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
 from config import *
 
-xml_model = '<?xml-model http://www.tei-c.org/release/xml/tei/custom/'\
-        'schema/relaxng/tei_all.rng application/xml http://relaxng.org/ns/'\
-        'structure/1.0 http://www.tei-c.org/release/xml/tei/custom/schema/'\
-        'relaxng/tei_all.rng application/xml'\
-        'http://purl.oclc.org/dsdl/schematron ?>'
+xml_model = '<?xml-model href="https://dracor.org/schema.rng" type="applicati'\
+    'on/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>'
 
 input_file = argv[1]
 output = f'{argv[1].rsplit(".", 1)[0]}.xml'
@@ -35,9 +32,12 @@ body_labels = {'j': 'act', '<e>': 'echo', '<p>': 'prose',
                '<i>': 'stage_direction', '<x>': 'comment'}
 
 
+
 def make_tree(title, subtitle, author, source, date,
               authority, publisher, licence, speakers_list):
-    root = Element('TEI')
+    root = Element('TEI',
+                   xmlns='http://www.tei-c.org/ns/1.0')
+    root.set('{http://www.w3.org/XML/1998/namespace}lang', 'es')
     tree = etree.ElementTree(root)
     tei_header = SubElement(root, 'teiHeader')
     # fileDesc
@@ -73,8 +73,20 @@ def make_tree(title, subtitle, author, source, date,
     # revisionDesc
     tei_header.append(make_revision())
     # Construct text and body
+    standoff =  SubElement(root, 'standOff')
+    standoff = make_standoff(standoff)
+
     text = SubElement(root, 'text')
     return tree
+
+def parse_date(date):
+    if '-' in date:
+        date = {'notbefore': date.split('-')[0], 'notafter': date.split('-')[1]}
+    elif '?' in date:
+        date = {'when': date.strip('?'), 'cert': 'medium'}
+    else:
+        date = {'when': date, 'cert': 'medium'}
+    return date
 
 
 def make_title(title_stmt, title, subtitle):
@@ -108,7 +120,7 @@ def make_edition(publication_stmt, authority, publisher, licence):
     pub.set('{http://www.w3.org/XML/1998/namespace}id', publisher[0])
     pub.text = publisher[1]
     SubElement(publication_stmt, 'idno', type='URL').text = publisher[2]
-    SubElement(publication_stmt, 'date', when=f'{hodie}T{nunc}+01:00')
+    SubElement(publication_stmt, 'date', when=f'{hodie}T{nunc}')
     lic = SubElement(SubElement(publication_stmt, 'availability'), 'licence')
     SubElement(lic, 'ab').text = licence
     SubElement(lic, 'ref').text = licence_url
@@ -131,15 +143,18 @@ def make_source(source_desc, source):
     SubElement(bibld, 'idno', type='URL').text = url
     biblo = SubElement(source_desc, 'bibl', type='originalSource')
     SubElement(biblo, 'title').text = original
-    SubElement(biblo, 'date', when=date, type='print')
-    SubElement(biblo, 'date', when=date, type='written')
     return source_desc
 
+def make_standoff(stand_off):
+    list_event = SubElement(stand_off, 'listEvent')
+    SubElement(list_event, 'date', date, type='print')
+    SubElement(list_event, 'date', date, type='written')
+    return stand_off
 
 def make_revision():
     rev = Element('revisionDesc')
     first_commit = SubElement(SubElement(rev, 'listChange'),
-                              'change', when=f'{hodie}T{nunc}+01:00')
+                              'change', when=f'{hodie}T{nunc}')
     first_commit.text = 'Converted with txt2tei'\
         '<https://github.com/fsanzl/txt2tei>'
     return rev
@@ -417,6 +432,8 @@ for line in lines:
             break
     else:
         break
+if date:
+    date = parse_date(date)
 
 fauthors = parse('authors.xml')
 author = author.split()
