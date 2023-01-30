@@ -6,15 +6,23 @@ from unidecode import unidecode
 import pandas as pd
 import lxml.etree as etree
 from lxml.etree import Element, SubElement, parse
-from config import *
+editor = 'Fernando Sanz-Lázaro'
 
+authority = 'University of Vienna, Institute of Romance Languages and Literatures'
+publisher_id  = 'dracor'
+publisher_name = 'DraCor'
+licence = 'CC BY 3.0'
+licence_url = 'https://creativecommons.org/publicdomain/by/3.0/'
+
+
+date = False
 hodie = datetime.today().strftime('%Y-%m-%d')
 nunc = datetime.today().strftime('%H:%M:%S')
 editor = ''
 authority = ''
 publisher = ('DraCor', 'dracor', 'https://dracor.org')
-licence = 'CC0'
-licence_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
+licence = 'CC BY'
+licence_url = 'https://creativecommons.org/publicdomain/BY/3.0/'
 
 xml_model = '<?xml-model href="https://dracor.org/schema.rng" type="applicati'\
     'on/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>'
@@ -208,7 +216,10 @@ def make_id(name):
 
 
 def find_characters(play_file):
-    nombresdf = pd.read_csv('sexos.csv')
+    try:
+        nombresdf = pd.read_csv('sexos.csv')
+    except:
+        nombresdf = pd.DataFrame(columns=['Personaje', 'Sexo', 'Comprobado'])
     names = []
     characters_dict = {}
     indirect = ['ÉL', 'ELLA', 'ELLOS', 'ELLAS', 'TODOS', 'TODAS']
@@ -425,6 +436,7 @@ with open(input_file) as f:
     characters_list = find_characters(f)
 with open(input_file) as g:
     lines = g.readlines()
+fauthors = parse('authors.xml')
 for line in lines:
     if line.startswith('<'):
         label = re.search(r'^<\w*>', line.strip()).group()
@@ -435,10 +447,8 @@ for line in lines:
             break
     else:
         break
-if date:
-    date = parse_date(date)
-
-fauthors = parse('authors.xml')
+    if date:
+        date = parse_date(date)
 author = author.split()
 if len(author) > 1:
     cert = 'medium'
