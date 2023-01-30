@@ -6,6 +6,7 @@ from unidecode import unidecode
 import pandas as pd
 import lxml.etree as etree
 from lxml.etree import Element, SubElement, parse
+from config import *
 
 hodie = datetime.today().strftime('%Y-%m-%d')
 nunc = datetime.today().strftime('%H:%M:%S')
@@ -14,7 +15,6 @@ authority = ''
 publisher = ('DraCor', 'dracor', 'https://dracor.org')
 licence = 'CC0'
 licence_url = 'https://creativecommons.org/publicdomain/zero/1.0/'
-from config import *
 
 xml_model = '<?xml-model href="https://dracor.org/schema.rng" type="applicati'\
     'on/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>'
@@ -72,15 +72,17 @@ def make_tree(title, subtitle, author, source, date,
     # revisionDesc
     tei_header.append(make_revision())
     # Construct text and body
-    standoff =  SubElement(root, 'standOff')
+    standoff = SubElement(root, 'standOff')
     standoff = make_standoff(standoff)
 
-    text = SubElement(root, 'text')
+    SubElement(root, 'text')
     return tree
+
 
 def parse_date(date):
     if '-' in date:
-        date = {'notbefore': date.split('-')[0], 'notafter': date.split('-')[1]}
+        date = {'notbefore': date.split('-')[0],
+                'notafter': date.split('-')[1]}
     elif '?' in date:
         date = {'when': date.strip('?'), 'cert': 'medium'}
     else:
@@ -144,11 +146,13 @@ def make_source(source_desc, source):
     SubElement(biblo, 'title').text = original
     return source_desc
 
+
 def make_standoff(stand_off):
     list_event = SubElement(stand_off, 'listEvent')
     SubElement(list_event, 'date', date, type='print')
     SubElement(list_event, 'date', date, type='written')
     return stand_off
+
 
 def make_revision():
     rev = Element('revisionDesc')
@@ -441,8 +445,8 @@ if len(author) > 1:
 else:
     cert = 'high'
 author = author[0]
-authors = [a for a in fauthors.xpath('author') if any(b.text == author
-                                      for b in a.xpath('persName/*'))]
+authors = [a for a in fauthors.xpath('author')
+           if any(b.text == author for b in a.xpath('persName/*'))]
 author = [a for a in authors if a.get('cert') == cert][0]
 tree = make_tree(
     title,
