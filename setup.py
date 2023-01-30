@@ -9,7 +9,7 @@ README = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="fonemas",
+    name="txt2tei",
     version="1.0.1-2",
     python_requires='>=3.5',
     description="An aid to encoding plays as XML-TEI",
