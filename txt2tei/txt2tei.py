@@ -32,7 +32,6 @@ body_labels = {'j': 'act', '<e>': 'echo', '<p>': 'prose',
                '<i>': 'stage_direction', '<x>': 'comment'}
 
 
-
 def make_tree(title, subtitle, author, source, date,
               authority, publisher, licence, speakers_list):
     root = Element('TEI',
@@ -255,7 +254,7 @@ def parse_cast(line):
         title = characters[0].split('|')
         characters = title[1:] + characters[1:]
         title = title[0]
-        h = SubElement(cast, 'head').text = title
+        SubElement(cast, 'head').text = title
     for character in characters:
         char = character.split(',')
         item = SubElement(cast, 'castItem')
@@ -492,8 +491,7 @@ for idx, line in enumerate(lines):
                     act = SubElement(body, 'div', type='act', n=f'{actn}')
                     scene = SubElement(act, 'div', type='scene', n=f'{scenen}')
                 if head and len(head) > 1:
-                    SubElement(act, 'head')
-                    h.text = head
+                    SubElement(act, 'head').text = head
             else:
                 scenen += 1
                 if scenen > 1:
