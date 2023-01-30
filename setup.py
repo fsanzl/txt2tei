@@ -7,12 +7,10 @@ HERE = pathlib.Path(__file__).parent
 # The text of the README file
 README = (HERE / "README.md").read_text()
 
-
-
 # This call to setup() does all the work
 setup(
     name="fonemas",
-    version="1.0.1-1",
+    version="1.0.1-2",
     python_requires='>=3.5',
     description="An aid to encoding plays as XML-TEI",
     long_description=README,
@@ -26,7 +24,8 @@ setup(
     author_email="fsanzl@gmail.com",
     license="LGPL",
     classifiers=[
-        "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
+        "License :: OSI Approved :: GNU Lesser General Public License v2 or"
+        "later (LGPLv2+)",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.8",
