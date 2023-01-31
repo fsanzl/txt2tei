@@ -39,6 +39,11 @@ Edit the personalised section of txt2tei.py to suit your needs and run the follo
 ./txt2tei.py tabularfile.txt
 ```
 
+If installed with pip, the syntax differs:
+```bash
+txt2tei tabularfile.txt
+```
+
 Additionally, the script tei2txt.py performs the inverse operation
 ```bash
 ./tei2txt.py xmlteifile.xml
