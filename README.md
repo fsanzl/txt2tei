@@ -25,12 +25,15 @@ txt2tei runs on lxml and tei2txt on BS4. They may be unified in the future thoug
 
 # Installation
 
-Download the python scripts and the files sexos.csv, edition.py and libtxt2tei.py and authors.xml in the same directory
+Download the python scripts and the files sexos.csv and authors.xml in the same directory. You can also install it as a pip package, in which case it is not necessary to save the data files in your working directory. 
 
+```bash
+pip install txt2tei
+```
 
 ## Use
 
-Edit edition.py with your edition data and run the following commands:
+Edit the personalised section of txt2tei.py to suit your needs and run the following commands:
 
 ```bash
 ./txt2tei.py tabularfile.txt
@@ -43,7 +46,7 @@ Additionally, the script tei2txt.py performs the inverse operation
 
 ## Description
 
-The tabular file must follow the following conventions:
+The tabular file must be encoded as UTF-8 Unicode text with LF terminators (Unix encoding). The script will end with error if used on a text with CRLF terminators (DOS encoding) or other exotic encodings. It should be no problem as any respectable editor lets you change  the encoding. Alternatively, there are simple one-liner tools around to convert from one format to another. In any case, the content must follow the following conventions:
 ```
 <x>Comment
 <a>Author's name (Just one single word, e.g. Calderón, Lope, Tirso...
