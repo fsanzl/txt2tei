@@ -432,7 +432,7 @@ subtitle = ''
 author = ''
 genre = ''
 subgenre = ''
-date = {}
+date = ''
 source = ''
 on_stage = []
 dramatis_personae = Element('null')
@@ -464,6 +464,9 @@ def main(input_arguments=sys.argv):
     for line in lines:
         global author
         global date
+        global title
+        global n
+        global sp
         if line.startswith('<'):
             label = re.search(r'^\s*<(\w*)>', line.strip()).group(1)
             if label in header_labels.keys():
@@ -476,9 +479,9 @@ def main(input_arguments=sys.argv):
             break
         if date:
             date = parse_date(date)
-        else:
-            date = False
     author = author.split()
+    if not date:
+        date = parse_date('')
     if len(author) > 1:
         cert = 'medium'
     else:
@@ -486,7 +489,12 @@ def main(input_arguments=sys.argv):
     author = author[0]
     authors = [a for a in fauthors.xpath('author')
                if any(b.text == author for b in a.xpath('persName/*'))]
-    author = [a for a in authors if a.get('cert') == cert][0]
+    if authors:
+        author = [a for a in authors if a.get('cert') == cert][0]
+    else:
+        a = Element('persName')
+        a.text = author
+        author = a
     tree = make_tree(
         title,
         subtitle,
