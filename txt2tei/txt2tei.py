@@ -8,16 +8,9 @@ from datetime import datetime
 import importlib
 import os.path
 import sys
-if sys.version_info < (3, 9):
-    # importlib.resources either doesn't exist or lacks the files()
-    # function, so use the PyPI version:
-    import importlib_resources
-else:
-    # importlib.resources has files(), so use that:
-    import importlib.resources as importlib_resources
 
 ###############################################################################
-## Please, edit this part if necessary
+# Please, edit this part if necessary
 editor = 'Fernando Sanz-Lázaro'
 authority = 'University of Vienna, Institute of Romance Languages '\
     'and Literatures'
@@ -34,10 +27,10 @@ licence = 'CC BY'
 licence_url = 'https://creativecommons.org/publicdomain/BY/3.0/'
 xml_model = '<?xml-model href="https://dracor.org/schema.rng" type="applicati'\
         'on/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>'
-edition = '0.1'
 ###############################################################################
 
-def make_tree(title, subtitle, author, source, date,
+
+def make_tree(title, subtitle, author, genre, subgenre, source, date,
               authority, publisher, licence, speakers_list):
     root = Element('TEI',
                    xmlns='http://www.tei-c.org/ns/1.0')
@@ -78,7 +71,7 @@ def make_tree(title, subtitle, author, source, date,
     tei_header.append(make_revision())
     # Construct text and body
     standoff = SubElement(root, 'standOff')
-    standoff = make_standoff(standoff)
+    standoff = make_standoff(standoff, date)
 
     SubElement(root, 'text')
     return tree
@@ -152,7 +145,7 @@ def make_source(source_desc, source):
     return source_desc
 
 
-def make_standoff(stand_off):
+def make_standoff(stand_off, date):
     list_event = SubElement(stand_off, 'listEvent')
     SubElement(list_event, 'date', date, type='print')
     SubElement(list_event, 'date', date, type='written')
@@ -215,7 +208,7 @@ def make_id(name):
 def find_characters(play_file):
     try:
         nombresdf = pd.read_csv('sexos.csv')
-    except:
+    except Exception:
         nombresdf = pd.DataFrame(columns=['Personaje', 'Sexo', 'Comprobado'])
     names = []
     characters_dict = {}
@@ -426,13 +419,14 @@ def parse_name(ln, characters_list, on_stage):
 header_labels = {'t': 'title', 'tt': 'subtitle', 'a': 'author',
                  'g': 'genre', 's': 'subgenre', 'o': 'source',
                  'f': 'date', 'x': 'comment'}
+rev_header_lavels = dict((v, k) for k, v in header_labels.items())
 body_labels = {'j': 'act', '<e>': 'echo', '<p>': 'prose',
                '<i>': 'stage_direction', '<x>': 'comment'}
 subtitle = ''
 author = ''
 genre = ''
 subgenre = ''
-date = ''
+# date = ''
 source = ''
 on_stage = []
 dramatis_personae = Element('null')
@@ -448,9 +442,6 @@ reference = {'1º': 'I', '1.º': 'I', '2º': 'II', '2.º': 'II', '3º': 'III',
 def main(input_arguments=sys.argv):
     input_file = input_arguments[1]
     output = f'{input_file.rsplit(".", 1)[0]}.xml'
-    if len(input_arguments) > 2:
-        edition = input_arguments[2]
-
     with open(input_file) as f:
         characters_list = find_characters(f)
     with open(input_file) as g:
@@ -460,45 +451,45 @@ def main(input_arguments=sys.argv):
         else:
             with importlib.resources.path('txt2tei', 'authors.xml') as dat:
                 fauthors = parse(dat)
-       # fauthors = parse('authors.xml')
+    author = date = title = n = sp = ''
     for line in lines:
-        global author
-        global date
-        global title
-        global n
-        global sp
         if line.startswith('<'):
             label = re.search(r'^\s*<(\w*)>', line.strip()).group(1)
             if label in header_labels.keys():
-                value = line.strip(f'<{label}>').strip()
-                variable = f'{header_labels[label]}'
-                globals()[variable] = value
+                header_labels[label] = line.strip(f'<{label}>').strip()
             else:
                 break
         else:
             break
-        if date:
-            date = parse_date(date)
-    author = author.split()
-    if not date:
+        if header_labels['f']:
+            date = parse_date(header_labels['f'])
+
+    author = header_labels['a'].split()
+    title = header_labels['t']
+    subtitle = header_labels['tt']
+    genre = header_labels['g']
+    subgenre = header_labels['s']
+    source = header_labels['o']
+    if not header_labels['f']:
         date = parse_date('')
     if len(author) > 1:
         cert = 'medium'
     else:
         cert = 'high'
-    author = author[0]
+    if author:
+        author = author[0]
     authors = [a for a in fauthors.xpath('author')
                if any(b.text == author for b in a.xpath('persName/*'))]
     if authors:
         author = [a for a in authors if a.get('cert') == cert][0]
     else:
-        a = Element('persName')
-        a.text = author
-        author = a
+        author = Element('persName', text=author[0])
     tree = make_tree(
         title,
         subtitle,
         author,
+        genre,
+        subgenre,
         source,
         date,
         authority,
@@ -508,7 +499,6 @@ def main(input_arguments=sys.argv):
     text = tree.xpath('/TEI/text')[0]
     front = SubElement(text, 'front')
     body = SubElement(text, 'body')
-    dict_personas = {}
     count = 0
     actn = 0
     scenen = 1
@@ -520,10 +510,11 @@ def main(input_arguments=sys.argv):
         next_line = ''
         if not any(line.startswith(x) for x in header_labels):
             if line.strip() in reference.keys():
-                print(f'{input_file}:\tPlease, edit manually <sp who="#character">'
-                      f'for {line.strip()} in {output} verse {n}\n')
+                print(f'{input_file}:\tPlease, edit manually'
+                      '<sp who="#character"> for '
+                      f'{line.strip()} in {output} verse {n}\n')
             if line.startswith('<el>'):
-                dramatis_personae = parse_cast(value)
+                dramatis_personae = parse_cast(line)
                 front.append(dramatis_personae)
             elif line.startswith('<j>') or line.startswith('<q>'):
                 on_stage = []
@@ -533,13 +524,15 @@ def main(input_arguments=sys.argv):
                     scenen = 1
                     if actn > 1:
                         act = SubElement(body, 'div', type='act', n=f'{actn}')
-                        scene = SubElement(act, 'div', type='scene', n=f'{scenen}')
+                        scene = SubElement(act, 'div', type='scene',
+                                           n=f'{scenen}')
                     if head and len(head) > 1:
                         SubElement(act, 'head').text = head
                 else:
                     scenen += 1
                     if scenen > 1:
-                        scene = SubElement(act, 'div', type='scene', n=f'{scenen}')
+                        scene = SubElement(act, 'div', type='scene',
+                                           n=f'{scenen}')
             elif line.strip().startswith('<i>'):
                 text = f'{line.replace("<i>","").strip()}'
                 if line.startswith('\t'):
@@ -570,5 +563,6 @@ def main(input_arguments=sys.argv):
                 n = parsed_line[1]
                 sp.append(code)
     tree.write(output, doctype=xml_model, encoding='UTF-8', pretty_print=True)
+
 
 main()
