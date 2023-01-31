@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="txt2tei",
-    version="1.0.2",
+    version="1.0.2-1",
     python_requires='>=3.5',
     description="An aid to encoding plays as XML-TEI",
     long_description=README,
@@ -34,12 +34,11 @@ setup(
         "Natural Language :: Spanish",
     ],
     packages=["txt2tei"],
-    include_package_data=True,
     entry_points={
         "console_scripts": [
-            "txt2tei = main",
+            "txt2tei = txt2tei:main",
         ]
     },
-    package_data={"": ["*.xml", "*.csv"]},
-    data_files = [('', ['txt2tei/authors.xml'])],
+    package_data={"": ["authors.xml", "sexos.csv"]},
+    include_package_data=True,
 )
