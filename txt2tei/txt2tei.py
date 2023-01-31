@@ -445,7 +445,7 @@ reference = {'1º': 'I', '1.º': 'I', '2º': 'II', '2.º': 'II', '3º': 'III',
              'SEGUNDA': 'ii', 'TERCERA': 'iii', 'CUARTA': 'iv'}
 
 
-def main(input_arguments):
+def main(input_arguments=sys.argv):
     input_file = input_arguments[1]
     output = f'{input_file.rsplit(".", 1)[0]}.xml'
     if len(input_arguments) > 2:
@@ -563,4 +563,4 @@ def main(input_arguments):
                 sp.append(code)
     tree.write(output, doctype=xml_model, encoding='UTF-8', pretty_print=True)
 
-main(sys.argv)
+main()
