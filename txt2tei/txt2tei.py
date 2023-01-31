@@ -16,7 +16,8 @@ else:
     # importlib.resources has files(), so use that:
     import importlib.resources as importlib_resources
 
-
+###############################################################################
+## Please, edit this part if necessary
 editor = 'Fernando Sanz-Lázaro'
 authority = 'University of Vienna, Institute of Romance Languages '\
     'and Literatures'
@@ -34,7 +35,7 @@ licence_url = 'https://creativecommons.org/publicdomain/BY/3.0/'
 xml_model = '<?xml-model href="https://dracor.org/schema.rng" type="applicati'\
         'on/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>'
 edition = '0.1'
-
+###############################################################################
 
 def make_tree(title, subtitle, author, source, date,
               authority, publisher, licence, speakers_list):
