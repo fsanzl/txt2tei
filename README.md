@@ -1,5 +1,5 @@
 [![License: GPL](https://img.shields.io/github/license/fsanzl/txt2tei)](https://opensource.org/licenses/GPL-3.0)
-<!--- [![Version: 1.0.1-2](https://img.shields.io/github/v/release/fsanzl/txt2tei?include_prereleases)](https://pypi.org/project/txt2tei/)
+<!--- [![Version: 1.0.2](https://img.shields.io/github/v/release/fsanzl/txt2tei?include_prereleases)](https://pypi.org/project/txt2tei/)
 # [![Python versions: 3.5, 3.6, 3.7, 3.8, 3.9](https://img.shields.io/pypi/pyversions/txt2tei)](https://pypi.org/project/txt2tei/) -->
 
 <h2 align="center">TXT2TEI</h2>
@@ -25,12 +25,12 @@ txt2tei runs on lxml and tei2txt on BS4. They may be unified in the future thoug
 
 # Installation
 
-Download the python scripts and the files sexos.csv, config.py and authors.xml in the same directory
+Download the python scripts and the files sexos.csv, edition.py and libtxt2tei.py and authors.xml in the same directory
 
 
 ## Use
 
-Edit config.py with your edition data and run the following commands:
+Edit edition.py with your edition data and run the following commands:
 
 ```bash
 ./txt2tei.py tabularfile.txt
