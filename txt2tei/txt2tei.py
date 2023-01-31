@@ -5,9 +5,15 @@ import pandas as pd
 import lxml.etree as etree
 from lxml.etree import Element, SubElement, parse
 from datetime import datetime
-import importlib
-import os.path
 import sys
+if sys.version_info < (3, 9):
+    # importlib.resources either doesn't exist or lacks the files()
+    # function, so use the PyPI version:
+    import importlib_resources
+else:
+    # importlib.resources has files(), so use that:
+    import importlib.resources as importlib_resources
+import os.path
 
 ###############################################################################
 # Please, edit this part if necessary
@@ -449,7 +455,7 @@ def main(input_arguments=sys.argv):
         if os.path.isfile('authors.xml'):
             fauthors = parse('authors.xml')
         else:
-            with importlib.resources.path('txt2tei', 'authors.xml') as dat:
+            with importlib_resources.path('txt2tei', 'authors.xml') as dat:
                 fauthors = parse(dat)
     author = date = title = n = sp = ''
     for line in lines:
