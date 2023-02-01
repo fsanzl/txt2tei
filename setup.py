@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="txt2tei",
-    version="1.0.2-3",
+    version="1.0.3",
     python_requires='>=3.5',
     description="An aid to encoding plays as XML-TEI",
     long_description=README,
