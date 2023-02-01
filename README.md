@@ -18,7 +18,7 @@ The programme requires following libraries:
 * pandas
 * datetime
 * unidecode
-* lxml
+* lxml >= 4.9.2
 
 txt2tei runs on lxml and tei2txt on BS4. They may be unified in the future though. 
 
