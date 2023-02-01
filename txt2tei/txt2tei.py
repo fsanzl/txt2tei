@@ -26,7 +26,6 @@ licence = 'CC BY 3.0'
 licence_url = 'https://creativecommons.org/publicdomain/by/3.0/'
 hodie = datetime.today().strftime('%Y-%m-%d')
 nunc = datetime.today().strftime('%H:%M:%S')
-editor = ''
 authority = ''
 publisher = ('DraCor', 'dracor', 'https://dracor.org')
 licence = 'CC BY'
@@ -383,6 +382,28 @@ def compare_sexes(pids, characters_list):
     return 'UNKNOWN'
 
 
+def parse_author(name):
+    if os.path.isfile('authors.xml'):
+        fauthors = parse('authors.xml')
+    else:
+        with importlib_resources.path('txt2tei', 'authors.xml') as dat:
+            fauthors = parse(dat)
+    names = name.split()
+    if len(names) > 1:
+        cert = 'medium'
+    else:
+        cert = 'high'
+    authors = [a for a in fauthors.xpath('author')
+               if any(b.text == names[0] for b in a.xpath('persName/*'))]
+    if authors:
+        author = [a for a in authors if a.get('cert') == cert][0]
+    else:
+        author = Element('Author')
+        b = SubElement(author, 'persName')
+        b.text = name
+    return author
+
+
 def parse_name(ln, characters_list, on_stage):
     if '#' in ln:
         splitted = ln.split('#')
@@ -452,11 +473,6 @@ def main(input_arguments=sys.argv):
         characters_list = find_characters(f)
     with open(input_file) as g:
         lines = g.readlines()
-        if os.path.isfile('authors.xml'):
-            fauthors = parse('authors.xml')
-        else:
-            with importlib_resources.path('txt2tei', 'authors.xml') as dat:
-                fauthors = parse(dat)
     author = date = title = n = sp = ''
     for line in lines:
         if line.startswith('<'):
@@ -470,7 +486,7 @@ def main(input_arguments=sys.argv):
         if header_labels['f']:
             date = parse_date(header_labels['f'])
 
-    author = header_labels['a'].split()
+    author = parse_author(header_labels['a'])
     title = header_labels['t']
     subtitle = header_labels['tt']
     genre = header_labels['g']
@@ -478,18 +494,6 @@ def main(input_arguments=sys.argv):
     source = header_labels['o']
     if not header_labels['f']:
         date = parse_date('')
-    if len(author) > 1:
-        cert = 'medium'
-    else:
-        cert = 'high'
-    if author:
-        author = author[0]
-    authors = [a for a in fauthors.xpath('author')
-               if any(b.text == author for b in a.xpath('persName/*'))]
-    if authors:
-        author = [a for a in authors if a.get('cert') == cert][0]
-    else:
-        author = Element('persName', text=author[0])
     tree = make_tree(
         title,
         subtitle,
