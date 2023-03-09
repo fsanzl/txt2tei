@@ -26,7 +26,7 @@ for tag in lineas:
         print(n)
         metre = df.loc[(df['Title'] == title) & (df['Verse'] == int(n)),
                        'Rhythm'].values[0]
-        tag.attrib['metre'] = metre
+        tag.attrib['met'] = metre
 
 with open("output.xml", "w") as f:
     f.write(tostring(root, pretty_print=True, encoding='unicode'))
