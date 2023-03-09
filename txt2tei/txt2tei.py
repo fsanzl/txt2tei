@@ -368,10 +368,11 @@ def parse_speech(ln, nextl, nl):
                 line.set('part', 'M')
             else:
                 line.set('part', 'I')
+            line.set('n', f'{nl + 1}')
         else:
             nl += 1
-            if nl % 5 == 0:
-                line.set('n', f'{nl}')
+            # if nl % 5 == 0:
+            line.set('n', f'{nl}')
             if tabs > 1:
                 line.set('part', 'F')
     line.text = text
@@ -570,7 +571,7 @@ def main(input_arguments=sys.argv):
                         next_line = '\tFinal'
                 parsed_line = parse_speech(line, next_line, count)
                 code = parsed_line[0]
-                n = parsed_line[1]
+                count = parsed_line[1]
                 sp.append(code)
     tree.write(output, doctype=xml_model, encoding='UTF-8', pretty_print=True)
 
