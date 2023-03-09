@@ -355,11 +355,11 @@ def parse_exit(on_stage, line):
     return on_stage
 
 
-def parse_speech(ln, nextl, nl):
+def parse_speech(ln, nextl, nl, p=False):
     tabs = ln.count('\t')
     tabsn = nextl.count('\t')
     text = re.search('(?:<.*>)*(.*)', ln.strip()).group(1)
-    if '<p>' in text:
+    if p:
         line = Element('p')
     else:
         line = Element('l')
@@ -558,6 +558,10 @@ def main(input_arguments=sys.argv):
                 scene.append(sp)
                 on_stage = parsed_line[1]
             elif line.startswith('\t') or line.strip().startswith('<p>'):
+                if line.strip().startswith('<p>'):
+                    p = True
+                else:
+                    p = False
                 for i in list(range(1, 9)):
                     if idx+i < len(lines):
                         if any([x in lines[idx+i] for x in ['<i>', '<x>']]):
@@ -569,7 +573,7 @@ def main(input_arguments=sys.argv):
                             pass
                     else:
                         next_line = '\tFinal'
-                parsed_line = parse_speech(line, next_line, count)
+                parsed_line = parse_speech(line, next_line, count, p)
                 code = parsed_line[0]
                 count = parsed_line[1]
                 sp.append(code)
