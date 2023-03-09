@@ -28,6 +28,6 @@ for tag in lineas:
                        'Rhythm'].values[0]
         tag.attrib['metre'] = metre
 
-with open("output.xml", "wb") as f:
-    f.write(tostring(root))
+with open("output.xml", "w") as f:
+    f.write(tostring(root, pretty_print=True, encoding='unicode'))
 # root.write('output.xml', pretty_print=True)
