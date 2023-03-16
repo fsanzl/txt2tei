@@ -1,5 +1,5 @@
 [![License: GPL](https://img.shields.io/github/license/fsanzl/txt2tei)](https://opensource.org/licenses/GPL-3.0)
-<!--- [![Version: 1.0.4](https://img.shields.io/github/v/release/fsanzl/txt2tei?include_prereleases)](https://pypi.org/project/txt2tei/)
+<!--- [![Version: 1.0.5](https://img.shields.io/github/v/release/fsanzl/txt2tei?include_prereleases)](https://pypi.org/project/txt2tei/)
 # [![Python versions: 3.5, 3.6, 3.7, 3.8, 3.9](https://img.shields.io/pypi/pyversions/txt2tei)](https://pypi.org/project/txt2tei/) -->
 
 <h2 align="center">TXT2TEI</h2>
@@ -112,6 +112,11 @@ Most important: The programme is aimed to Spanish 17th century plays. The langua
 
 Feel free to contribute using the [GitHub Issue Tracker](https://github.com/fsanzl/txt2tei/issues) for feedback, suggestions, or bug reports.
 
+## Changelog
+
+* 1.0.5
+
+** Solved pronouns-related crash
 
 ## Licence
 
