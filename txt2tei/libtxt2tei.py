@@ -309,7 +309,7 @@ def parse_pronoun(pronoun, on_stage, characters_list):
     else:
         sex = 'FEMALE'
     return [[person for person in on_stage
-             if characters_list[person][1] == sex][-1]]
+             if characters_list[person][1] == sex]][-1]
 
 
 def parse_exit(on_stage, line):
