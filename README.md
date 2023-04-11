@@ -114,9 +114,15 @@ Feel free to contribute using the [GitHub Issue Tracker](https://github.com/fsan
 
 ## Changelog
 
-* 1.0.5
+### 1.0.6
 
-** Solved pronouns-related crash
+- Solved empty date crash. 
+- Handling BOM and Hasefroch line terminators
+- Changelog markdown syntax
+
+### 1.0.5
+
+- Solved pronouns-related crash
 
 ## Licence
 
