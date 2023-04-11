@@ -6,6 +6,7 @@ import lxml.etree as etree
 from lxml.etree import Element, SubElement, parse
 from datetime import datetime
 import sys
+import chardet
 if sys.version_info < (3, 9):
     # importlib.resources either doesn't exist or lacks the files()
     # function, so use the PyPI version:
@@ -20,14 +21,14 @@ import os.path
 editor = 'Fernando Sanz-Lázaro'
 authority = 'University of Vienna, Institute of Romance Languages '\
     'and Literatures'
-publisher_id = 'dracor'
-publisher_name = 'DraCor'
+publisher_id = ''
+publisher_name = ''
 licence = 'CC BY 3.0'
 licence_url = 'https://creativecommons.org/publicdomain/by/3.0/'
 hodie = datetime.today().strftime('%Y-%m-%d')
 nunc = datetime.today().strftime('%H:%M:%S')
 authority = ''
-publisher = ('DraCor', 'dracor', 'https://dracor.org')
+publisher = ('', '', '')
 licence = 'CC BY'
 licence_url = 'https://creativecommons.org/publicdomain/BY/3.0/'
 xml_model = '<?xml-model href="https://dracor.org/schema.rng" type="applicati'\
@@ -83,7 +84,9 @@ def make_tree(title, subtitle, author, genre, subgenre, source, date,
 
 
 def parse_date(date):
-    if '-' in date:
+    if not date or len(date) == 0:
+        date = {'notbefore': '1550', 'notafter': '1699'}
+    elif '-' in date:
         date = {'notbefore': date.split('-')[0],
                 'notafter': date.split('-')[1]}
     elif '?' in date:
@@ -447,7 +450,7 @@ def parse_name(ln, characters_list, on_stage):
 header_labels = {'t': 'title', 'tt': 'subtitle', 'a': 'author',
                  'g': 'genre', 's': 'subgenre', 'o': 'source',
                  'f': 'date', 'x': 'comment'}
-rev_header_lavels = dict((v, k) for k, v in header_labels.items())
+rev_header_labels = dict((v, k) for k, v in header_labels.items())
 body_labels = {'j': 'act', '<e>': 'echo', '<p>': 'prose',
                '<i>': 'stage_direction', '<x>': 'comment'}
 subtitle = ''
@@ -467,13 +470,21 @@ reference = {'1º': 'I', '1.º': 'I', '2º': 'II', '2.º': 'II', '3º': 'III',
              'SEGUNDA': 'ii', 'TERCERA': 'iii', 'CUARTA': 'iv'}
 
 
+def unixfy(filename):
+    with open(filename, 'rb') as file:
+        raw = file.read(32)
+        encoding = chardet.detect(raw)['encoding']
+    return encoding
+
+
 def main(input_arguments=sys.argv):
     input_file = input_arguments[1]
     output = f'{input_file.rsplit(".", 1)[0]}.xml'
-    with open(input_file) as f:
+    enc = unixfy(input_file)
+    with open(input_file, 'rU', encoding=enc) as f:
         characters_list = find_characters(f)
-    with open(input_file) as g:
-        lines = g.readlines()
+        f.seek(0)
+        lines = f.readlines()
     author = date = title = n = sp = ''
     for line in lines:
         if line.startswith('<'):
@@ -484,17 +495,16 @@ def main(input_arguments=sys.argv):
                 break
         else:
             break
-        if header_labels['f']:
-            date = parse_date(header_labels['f'])
-
+    if header_labels['f']:
+        date = parse_date(header_labels['f'])
+    else:
+        date = parse_date('')
     author = parse_author(header_labels['a'])
     title = header_labels['t']
     subtitle = header_labels['tt']
     genre = header_labels['g']
     subgenre = header_labels['s']
     source = header_labels['o']
-    if not header_labels['f']:
-        date = parse_date('')
     tree = make_tree(
         title,
         subtitle,
