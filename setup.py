@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="txt2tei",
-    version="1.0.6",
+    version="1.0.6-1",
     python_requires='>=3.5',
     description="An aid to encoding plays as XML-TEI",
     long_description=README,
@@ -37,7 +37,8 @@ setup(
         'pandas',
         'lxml',
         'unidecode',
-        'datetime'
+        'datetime',
+        'chardet'
     ],
     packages=["txt2tei"],
     entry_points={

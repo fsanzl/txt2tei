@@ -19,6 +19,7 @@ The programme requires following libraries:
 * datetime
 * unidecode
 * lxml >= 4.9.2
+* chardet
 
 txt2tei runs on lxml and tei2txt on BS4. They may be unified in the future though. 
 
@@ -113,6 +114,10 @@ Most important: The programme is aimed to Spanish 17th century plays. The langua
 Feel free to contribute using the [GitHub Issue Tracker](https://github.com/fsanzl/txt2tei/issues) for feedback, suggestions, or bug reports.
 
 ## Changelog
+
+### 1.0.6-1
+
+- Added chardet to dependencies
 
 ### 1.0.6
 
