@@ -34,7 +34,7 @@ persname = titlestmt.persname.get_text().strip()
 persname = re.sub('[\n ]{2,}', ' ', persname)
 author_ids = titlestmt.find_all('idno')
 
-########
+#
 publicationstmt = filedesc.publicationstmt
 authority = publicationstmt.authority.get_text().strip()
 editdate = publicationstmt.authority.get_text().strip()
@@ -86,7 +86,7 @@ if castlist:
 
 body = soup.body
 actos = body.find_all(re.compile('^div$', re.I))
-# attrs={'type':re.compile('^act$', re.I)})
+
 if len(actos) < 1:
     actos = [body]
 n = 1

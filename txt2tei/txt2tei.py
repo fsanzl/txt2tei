@@ -481,7 +481,7 @@ def main(input_arguments=sys.argv):
     input_file = input_arguments[1]
     output = f'{input_file.rsplit(".", 1)[0]}.xml'
     enc = unixfy(input_file)
-    with open(input_file, 'rU', encoding=enc) as f:
+    with open(input_file, 'r', encoding=enc) as f:
         characters_list = find_characters(f)
         f.seek(0)
         lines = f.readlines()
