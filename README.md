@@ -115,9 +115,11 @@ Feel free to contribute using the [GitHub Issue Tracker](https://github.com/fsan
 
 ## Changelog
 
-### 1.0.6-1
+
+### 1.0.6-2
 
 - Added chardet to dependencies
+- Solved deprecated 'rU'
 
 ### 1.0.6
 
@@ -129,7 +131,13 @@ Feel free to contribute using the [GitHub Issue Tracker](https://github.com/fsan
 
 - Solved pronouns-related crash
 
-## Licence
 
-This project is under GNU GPL 3. See [LICENCE](https://github.com/fsanzl/txt2tei/LICENSE) for details.
+## Copyright
 
+Copyright (C) 2022  Fernando Sanz-Lázaro <<fsanzl@gmail.com>>
+
+This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with this library. If not, see <<https://www.gnu.org/licenses/>>.
