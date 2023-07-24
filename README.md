@@ -131,7 +131,19 @@ Feel free to contribute using the [GitHub Issue Tracker](https://github.com/fsan
 
 - Solved pronouns-related crash
 
-<<<<<<< HEAD
+## How to cite *txt2tei*
+
+Authors of scientific papers including results generated using *txt2tei* are encouraged to cite the following paper.
+
+```xml
+@article{SanzLazaroF_RHD2023, 
+    author    = {Sanz-Lázaro, Fernando},
+    title     = {Del fonema al verso: una caja de herramientas digitales de escansión teatral},
+    volume    = {8},
+    pubstate  = {inpress},
+    journal   = {Revista de Humanidades Digitales},
+}
+```
 
 ## Copyright
 
